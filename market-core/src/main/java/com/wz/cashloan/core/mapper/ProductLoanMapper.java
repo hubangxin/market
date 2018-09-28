@@ -23,4 +23,6 @@ public interface ProductLoanMapper {
     List<Map> findAllProductLoan(Map<String, Object> map);
 
     Map findById(Long id);
+
+    ProductLoan selectByProCode(String proCode);
 }

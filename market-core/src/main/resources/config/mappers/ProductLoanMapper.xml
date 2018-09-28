@@ -40,6 +40,13 @@
         from product_loan
         where id = #{id,jdbcType=BIGINT}
     </select>
+
+    <select id="selectByProCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from product_loan
+        where pro_code = #{proCode,jdbcType=VARCHAR}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from product_loan
     where id = #{id,jdbcType=BIGINT}

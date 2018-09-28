@@ -9,12 +9,14 @@ import com.wz.cashloan.core.common.model.UploadFileRes;
 import com.wz.cashloan.core.common.util.RdPage;
 import com.wz.cashloan.core.common.util.ServletUtils;
 import com.wz.cashloan.core.common.web.controller.BaseController;
+import com.wz.cashloan.core.model.ProductLoan;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,10 +28,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Hbx on 2018/9/27.
@@ -66,63 +65,101 @@ public class ProductController extends BaseController {
 
 
     /**
-     *
-     * @param name 名称
-     * @param description 描述
-     * @param minAmount  最小金额
-     * @param maxAmount   最大
-     * @param minLimit 最小期限
-     * @param maxLimit 最大
-     * @param limitUnit D 天  M 月
-     * @param rate 利率
-     * @param rateType 利率类型  D M  Y
-     * @param proCode 标识码
-     * @param sort 排序
-     * @param labelIds 标签ID
-     * @param proUrl  注册地址
+     * @param name            名称
+     * @param description     描述
+     * @param minAmount       最小金额
+     * @param maxAmount       最大
+     * @param minLimit        最小期限
+     * @param maxLimit        最大
+     * @param limitUnit       D 天  M 月
+     * @param rate            利率
+     * @param rateType        利率类型  D M  Y
+     * @param proCode         标识码
+     * @param sort            排序
+     * @param labelIds        标签ID
+     * @param proUrl          注册地址
      * @param applyCondition  申请条件
-     * @param applyProcessImg  申请流程图片
-     * @param picture logo
+     * @param applyProcessImg 申请流程图片
+     * @param picture         logo
      * @param proInstructions 说明
      */
-    @RequestMapping("/product/add.htm")
-    public void add(@RequestParam(value = "name", required = true) String name,
-                    @RequestParam(value = "description", required = true) String description,
-                    @RequestParam(value = "minAmount", required = false) String minAmount,
-                    @RequestParam(value = "maxAmount", required = false) String maxAmount,
-                    @RequestParam(value = "minLimit", required = false) String minLimit,
-                    @RequestParam(value = "maxLimit", required = false) String maxLimit,
-                    @RequestParam(value = "limitUnit", required = false) String limitUnit,
-                    @RequestParam(value = "rate", required = true) String rate,
-                    @RequestParam(value = "rateType", required = false) String rateType,
-                    @RequestParam(value = "proCode", required = true) String proCode,
-                    @RequestParam(value = "sort", required = false) int sort,
-                    @RequestParam(value = "labelIds", required = true) String labelIds,
-                    @RequestParam(value = "proUrl", required = true) String proUrl,
-                    @RequestParam(value = "applyCondition", required = true) String applyCondition,
-                    @RequestParam(value = "applyProcessImg", required = false) MultipartFile applyProcessImg,
-                    @RequestParam(value = "picture", required = false) MultipartFile picture,
-                    @RequestParam(value = "proInstructions", required = true) String proInstructions)
+    @RequestMapping("/product/saveOrUpdate.htm")
+    public void saveOrUpdate(@RequestParam(value = "productId", required = false) Long productId,
+                             @RequestParam(value = "name", required = true) String name,
+                             @RequestParam(value = "description", required = true) String description,
+                             @RequestParam(value = "minAmount", required = false) String minAmount,
+                             @RequestParam(value = "maxAmount", required = true) String maxAmount,
+                             @RequestParam(value = "minLimit", required = false) String minLimit,
+                             @RequestParam(value = "maxLimit", required = true) String maxLimit,
+                             @RequestParam(value = "limitUnit", required = true) String limitUnit,
+                             @RequestParam(value = "rate", required = true) String rate,
+                             @RequestParam(value = "rateType", required = true) String rateType,
+                             @RequestParam(value = "proCode", required = true) String proCode,
+                             @RequestParam(value = "sort", required = true) int sort,
+                             @RequestParam(value = "labelIds", required = true) String labelIds,
+                             @RequestParam(value = "proUrl", required = true) String proUrl,
+                             @RequestParam(value = "applyCondition", required = true) String applyCondition,
+                             @RequestParam(value = "applyProcessImg", required = false) MultipartFile applyProcessImg,
+                             @RequestParam(value = "picture", required = false) MultipartFile picture,
+                             @RequestParam(value = "proInstructions", required = true) String proInstructions)
 
     {
         Map<String, Object> result = new HashMap<>();
+        List<UploadFileRes> uploadFileResList = new LinkedList<>();
+        saveMultipartFile(uploadFileResList, picture);
+        saveMultipartFile(uploadFileResList, applyProcessImg);
+        ProductLoan productLoan = new ProductLoan();
+        productLoan.setName(name);
+        productLoan.setDescription(description);
+        if (StringUtils.isNotBlank(minAmount)) {
+            productLoan.setMinAmount(minAmount);
+        }
+        productLoan.setMaxAmount(maxAmount);
+        if(StringUtils.isNotBlank(minLimit)){
+            productLoan.setMinLimit(minLimit);
+        }
+        productLoan.setMaxLimit(maxLimit);
+        productLoan.setLimitUnit(limitUnit);
+        productLoan.setRate(rate);
+        productLoan.setRateType(rateType);
+        productLoan.setProCode(proCode);
+        productLoan.setSort(sort);
+
+        productLoan.setLabelIds(labelIds);
+        productLoan.setProUrl(proUrl);
+        productLoan.setApplyCondition(applyCondition);
+        productLoan.setProInstructions(proInstructions);
+
+        productLoan.setPicture(uploadFileResList.get(0).getResPath());
+        productLoan.setApplyProcessImg(uploadFileResList.get(1).getResPath());
+
+        //更新
+        if (productId != null) {
+
+            productLoan.setId(productId);
+            result = productService.update(productLoan);
+
+        } else {
+            productLoan.setState("1");
+            result = productService.save(productLoan);
+        }
 //        result = productService.findById(productId);
         ServletUtils.writeToResponse(response, result);
     }
 
-    /**
-     * 修改
-     *
-     * @param productId
-     */
-    @RequestMapping("/product/update.htm")
-    public void update(@RequestParam(value = "productId") Long productId)
-
-    {
-        Map<String, Object> result = new HashMap<>();
-        result = productService.findById(productId);
-        ServletUtils.writeToResponse(response, result);
-    }
+//    /**
+//     * 修改
+//     *
+//     * @param productId
+//     */
+//    @RequestMapping("/product/update.htm")
+//    public void update(@RequestParam(value = "productId") Long productId)
+//
+//    {
+//        Map<String, Object> result = new HashMap<>();
+//        result = productService.findById(productId);
+//        ServletUtils.writeToResponse(response, result);
+//    }
 
     /**
      * 禁用
@@ -134,7 +171,10 @@ public class ProductController extends BaseController {
 
     {
         Map<String, Object> result = new HashMap<>();
-        result = productService.findById(productId);
+        ProductLoan productLoan = new ProductLoan();
+        productLoan.setId(productId);
+        productLoan.setState("1");
+        result = productService.update(productLoan);
         ServletUtils.writeToResponse(response, result);
     }
 
