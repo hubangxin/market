@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wz.cashloan.core.mapper.ProductLoanMapper">
+    <resultMap id="BaseResultMap" type="com.wz.cashloan.core.model.ProductLoan">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="picture" property="picture" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="min_amount" property="minAmount" jdbcType="VARCHAR"/>
+        <result column="max_amount" property="maxAmount" jdbcType="VARCHAR"/>
+        <result column="min_limit" property="minLimit" jdbcType="VARCHAR"/>
+        <result column="max_limit" property="maxLimit" jdbcType="VARCHAR"/>
+        <result column="limit_unit" property="limitUnit" jdbcType="VARCHAR"/>
+        <result column="rate" property="rate" jdbcType="VARCHAR"/>
+        <result column="rate_type" property="rateType" jdbcType="VARCHAR"/>
+        <result column="pro_code" property="proCode" jdbcType="VARCHAR"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="pro_url" property="proUrl" jdbcType="VARCHAR"/>
+        <result column="apply_condition" property="applyCondition" jdbcType="VARCHAR"/>
+        <result column="apply_process_img" property="applyProcessImg" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="VARCHAR"/>
+        <result column="pro_instructions" property="proInstructions" jdbcType="VARCHAR"/>
+        <result column="label_ids" property="labelIds" jdbcType="VARCHAR"/>
+        <result column="apply_count" property="applyCount" jdbcType="VARCHAR"/>
+        <result column="hot_label" property="hotLabel" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, name, picture, description, min_amount, max_amount, min_limit, max_limit, limit_unit, 
+    rate, rate_type, pro_code, sort, pro_url, apply_condition, apply_process_img, state, 
+    pro_instructions, label_ids, apply_count, hot_label, create_user, create_time, update_time,
+    remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from product_loan
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from product_loan
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.wz.cashloan.core.model.ProductLoan">
+    insert into product_loan (id, name, picture, 
+      description, min_amount, max_amount, 
+      min_limit, max_limit, limit_unit, 
+      rate, rate_type, pro_code, 
+      sort, pro_url, apply_condition, 
+      apply_process_img, state, pro_instructions, 
+      label_ids, apply_count, hot_label, 
+      create_user, create_time, update_time,
+      remark)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{minAmount,jdbcType=VARCHAR}, #{maxAmount,jdbcType=VARCHAR}, 
+      #{minLimit,jdbcType=VARCHAR}, #{maxLimit,jdbcType=VARCHAR}, #{limitUnit,jdbcType=VARCHAR}, 
+      #{rate,jdbcType=VARCHAR}, #{rateType,jdbcType=VARCHAR}, #{proCode,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER}, #{proUrl,jdbcType=VARCHAR}, #{applyCondition,jdbcType=VARCHAR}, 
+      #{applyProcessImg,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{proInstructions,jdbcType=VARCHAR}, 
+      #{labelIds,jdbcType=VARCHAR}, #{applyCount,jdbcType=VARCHAR}, #{hotLabel,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.wz.cashloan.core.model.ProductLoan">
+        insert into product_loan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="picture != null">
+                picture,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="minAmount != null">
+                min_amount,
+            </if>
+            <if test="maxAmount != null">
+                max_amount,
+            </if>
+            <if test="minLimit != null">
+                min_limit,
+            </if>
+            <if test="maxLimit != null">
+                max_limit,
+            </if>
+            <if test="limitUnit != null">
+                limit_unit,
+            </if>
+            <if test="rate != null">
+                rate,
+            </if>
+            <if test="rateType != null">
+                rate_type,
+            </if>
+            <if test="proCode != null">
+                pro_code,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="proUrl != null">
+                pro_url,
+            </if>
+            <if test="applyCondition != null">
+                apply_condition,
+            </if>
+            <if test="applyProcessImg != null">
+                apply_process_img,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="proInstructions != null">
+                pro_instructions,
+            </if>
+            <if test="labelIds != null">
+                label_ids,
+            </if>
+            <if test="applyCount != null">
+                apply_count,
+            </if>
+            <if test="hotLabel != null">
+                hot_label,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime!= null">
+                update_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="picture != null">
+                #{picture,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="minAmount != null">
+                #{minAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="maxAmount != null">
+                #{maxAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="minLimit != null">
+                #{minLimit,jdbcType=VARCHAR},
+            </if>
+            <if test="maxLimit != null">
+                #{maxLimit,jdbcType=VARCHAR},
+            </if>
+            <if test="limitUnit != null">
+                #{limitUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null">
+                #{rate,jdbcType=VARCHAR},
+            </if>
+            <if test="rateType != null">
+                #{rateType,jdbcType=VARCHAR},
+            </if>
+            <if test="proCode != null">
+                #{proCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sort != null">
+                #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="proUrl != null">
+                #{proUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="applyCondition != null">
+                #{applyCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="applyProcessImg != null">
+                #{applyProcessImg,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="proInstructions != null">
+                #{proInstructions,jdbcType=VARCHAR},
+            </if>
+            <if test="labelIds != null">
+                #{labelIds,jdbcType=VARCHAR},
+            </if>
+            <if test="applyCount != null">
+                #{applyCount,jdbcType=VARCHAR},
+            </if>
+            <if test="hotLabel != null">
+                #{hotLabel,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.wz.cashloan.core.model.ProductLoan">
+        update product_loan
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="picture != null">
+                picture = #{picture,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="minAmount != null">
+                min_amount = #{minAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="maxAmount != null">
+                max_amount = #{maxAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="minLimit != null">
+                min_limit = #{minLimit,jdbcType=VARCHAR},
+            </if>
+            <if test="maxLimit != null">
+                max_limit = #{maxLimit,jdbcType=VARCHAR},
+            </if>
+            <if test="limitUnit != null">
+                limit_unit = #{limitUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null">
+                rate = #{rate,jdbcType=VARCHAR},
+            </if>
+            <if test="rateType != null">
+                rate_type = #{rateType,jdbcType=VARCHAR},
+            </if>
+            <if test="proCode != null">
+                pro_code = #{proCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sort != null">
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="proUrl != null">
+                pro_url = #{proUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="applyCondition != null">
+                apply_condition = #{applyCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="applyProcessImg != null">
+                apply_process_img = #{applyProcessImg,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="proInstructions != null">
+                pro_instructions = #{proInstructions,jdbcType=VARCHAR},
+            </if>
+            <if test="labelIds != null">
+                label_ids = #{labelIds,jdbcType=VARCHAR},
+            </if>
+            <if test="applyCount != null">
+                apply_count = #{applyCount,jdbcType=VARCHAR},
+            </if>
+            <if test="hotLabel != null">
+                hot_label = #{hotLabel,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.wz.cashloan.core.model.ProductLoan">
+    update product_loan
+    set name = #{name,jdbcType=VARCHAR},
+      picture = #{picture,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      min_amount = #{minAmount,jdbcType=VARCHAR},
+      max_amount = #{maxAmount,jdbcType=VARCHAR},
+      min_limit = #{minLimit,jdbcType=VARCHAR},
+      max_limit = #{maxLimit,jdbcType=VARCHAR},
+      limit_unit = #{limitUnit,jdbcType=VARCHAR},
+      rate = #{rate,jdbcType=VARCHAR},
+      rate_type = #{rateType,jdbcType=VARCHAR},
+      pro_code = #{proCode,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      pro_url = #{proUrl,jdbcType=VARCHAR},
+      apply_condition = #{applyCondition,jdbcType=VARCHAR},
+      apply_process_img = #{applyProcessImg,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      pro_instructions = #{proInstructions,jdbcType=VARCHAR},
+      label_ids = #{labelIds,jdbcType=VARCHAR},
+      apply_count = #{applyCount,jdbcType=VARCHAR},
+      hot_label = #{hotLabel,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+    <select id="findAllProductLoan" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT id,apply_count as applyCount,description,hot_label as hotLabel,label_ids as labelIds,max_amount as
+        maxAmount,name,picture,
+        rate,rate_type as rateType FROM product_loan
+        <where>
+            <if test="name != null and name != '' ">
+                and `name` like concat("%",#{name},"%")
+            </if>
+            <if test="labelIds != null and labelIds != '' ">
+                and label_ids like concat("%",#{labelIds},"%")
+            </if>
+            <if test="state != null and state != '' ">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultType="java.util.Map">
+        SELECT id,apply_condition as applyCondition,apply_count as applyCount,apply_process_img as applyProcessImg, description,hot_label as hotLabel,
+        label_ids as labelIds,limit_unit as limitUnit,max_amount as maxAmount, max_limit as maxLimit,min_amount as minAmount, min_limit as minLimit,
+        pro_instructions as proInstructions,picture,rate,rate_type as rateType FROM product_loan where id = #{id,jdbcType=BIGINT}
+    </select>
+</mapper>
