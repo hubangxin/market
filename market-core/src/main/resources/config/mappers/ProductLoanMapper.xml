@@ -338,7 +338,7 @@
 
     <select id="findAllProductLoan" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT id,apply_count as applyCount,description,hot_label as hotLabel,label_ids as labelIds,max_amount as
-        maxAmount,name,picture,
+        maxAmount,name,picture,state,pro_code as proCode,min_limit as minLimit,max_limit as maxLimit,limit_unit as limitUnit,
         rate,rate_type as rateType FROM product_loan
         <where>
             <if test="name != null and name != '' ">

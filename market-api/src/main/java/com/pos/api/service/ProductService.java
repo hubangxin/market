@@ -3,12 +3,15 @@ package com.pos.api.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wz.cashloan.core.common.context.Constant;
+import com.wz.cashloan.core.common.context.Global;
 import com.wz.cashloan.core.mapper.ProductLoanMapper;
 import com.wz.cashloan.core.model.ProductLoan;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,4 +81,57 @@ public class ProductService {
         return res;
     }
 
+    /**
+     * 详情
+     *
+     * @param id
+     * @return
+     */
+    public Map detail(Long id) {
+        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
+        ProductLoan productLoan1 = productLoanMapper.selectByPrimaryKey(id);
+        if (productLoan1 == null) {
+            res.put(Constant.RESPONSE_CODE, Constant.FAIL_CODE_VALUE);
+            res.put(Constant.RESPONSE_CODE_MSG, "无效id");
+            return res;
+        }
+
+        String serverHost = Global.getValue("server_host");
+        data.put("name", productLoan1.getName());
+        data.put("proInstructions", productLoan1.getProInstructions());
+//        String amount = "";
+//        if (StringUtils.isNotBlank(productLoan1.getMinAmount()) && StringUtils.isNotBlank(productLoan1.getMaxAmount())) {
+//            amount = productLoan1.getMinAmount() + "-" + productLoan1.getMaxAmount();
+//        } else {
+//            amount = productLoan1.getMinAmount() + "" + productLoan1.getMaxAmount();
+//        }
+        data.put("minAmount", productLoan1.getMinAmount());
+        data.put("maxAmount", productLoan1.getMaxAmount());
+
+        data.put("minLimit", productLoan1.getMinLimit());
+        data.put("maxLimit", productLoan1.getMaxLimit());
+        data.put("limitUnit", productLoan1.getLimitUnit());
+        data.put("labelIds", productLoan1.getLabelIds());
+        data.put("description", productLoan1.getDescription());
+        try {
+            data.put("applyProcessImg", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(productLoan1.getApplyProcessImg()) ? "" : URLEncoder.encode(productLoan1.getApplyProcessImg(), "UTF-8")));
+            data.put("picture", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(productLoan1.getPicture()) ? "" : URLEncoder.encode(productLoan1.getPicture(), "UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        data.put("applyCondition", productLoan1.getApplyCondition());
+        res.put(Constant.RESPONSE_DATA, data);
+        res.put(Constant.RESPONSE_CODE, Constant.SUCCEED_CODE_VALUE);
+        res.put(Constant.RESPONSE_CODE_MSG, Constant.OPERATION_SUCCESS);
+        return res;
+    }
+
+
+    public Page<Map> list(Map<String, Object> queryMap, int currentPage, int pageSize) {
+
+        PageHelper.startPage(currentPage, pageSize);
+        List<Map> mapList = productLoanMapper.findAllProductLoan(queryMap);
+        return (Page<Map>) mapList;
+    }
 }

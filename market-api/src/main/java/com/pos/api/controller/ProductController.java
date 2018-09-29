@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +27,10 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Hbx on 2018/9/27.
@@ -105,9 +107,9 @@ public class ProductController extends BaseController {
 
     {
         Map<String, Object> result = new HashMap<>();
-        List<UploadFileRes> uploadFileResList = new LinkedList<>();
-        saveMultipartFile(uploadFileResList, picture);
-        saveMultipartFile(uploadFileResList, applyProcessImg);
+//        List<UploadFileRes> uploadFileResList = new LinkedList<>();
+//        saveMultipartFile(uploadFileResList, picture);
+//        saveMultipartFile(uploadFileResList, applyProcessImg);
         ProductLoan productLoan = new ProductLoan();
         productLoan.setName(name);
         productLoan.setDescription(description);
@@ -115,7 +117,7 @@ public class ProductController extends BaseController {
             productLoan.setMinAmount(minAmount);
         }
         productLoan.setMaxAmount(maxAmount);
-        if(StringUtils.isNotBlank(minLimit)){
+        if (StringUtils.isNotBlank(minLimit)) {
             productLoan.setMinLimit(minLimit);
         }
         productLoan.setMaxLimit(maxLimit);
@@ -130,8 +132,16 @@ public class ProductController extends BaseController {
         productLoan.setApplyCondition(applyCondition);
         productLoan.setProInstructions(proInstructions);
 
-        productLoan.setPicture(uploadFileResList.get(0).getResPath());
-        productLoan.setApplyProcessImg(uploadFileResList.get(1).getResPath());
+        if (!picture.isEmpty()) {
+            UploadFileRes model = save(picture);
+            productLoan.setPicture(model.getResPath());
+        }
+
+        if (!applyProcessImg.isEmpty()) {
+            UploadFileRes model = save(applyProcessImg);
+            productLoan.setApplyProcessImg(model.getResPath());
+        }
+
 
         //更新
         if (productId != null) {
@@ -173,7 +183,8 @@ public class ProductController extends BaseController {
         Map<String, Object> result = new HashMap<>();
         ProductLoan productLoan = new ProductLoan();
         productLoan.setId(productId);
-        productLoan.setState("1");
+        productLoan.setState("2");
+        productLoan.setUpdateTime(new Date());
         result = productService.update(productLoan);
         ServletUtils.writeToResponse(response, result);
     }
@@ -191,6 +202,43 @@ public class ProductController extends BaseController {
         result = productService.findById(productId);
         ServletUtils.writeToResponse(response, result);
     }
+
+    /**
+     * 查看
+     *
+     * @param productId
+     */
+    @RequestMapping("/product/detail.htm")
+    public void detail(@RequestParam(value = "productId") Long productId)
+
+    {
+        Map<String, Object> result = new HashMap<>();
+        result = productService.detail(productId);
+        ServletUtils.writeToResponse(response, result);
+    }
+
+
+    @RequestMapping("/product/list.htm")
+    public void list(@RequestParam(value = "name", required = false) String name,
+                     @RequestParam(value = "currentPage") int currentPage,
+                     @RequestParam(value = "pageSize") int pageSize,
+                     @RequestParam(value = "state", required = false) String state)
+
+    {
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> query = new HashMap<>();
+        if(StringUtils.isNotBlank(name)){
+            query.put("name",name);
+        }
+        if(StringUtils.isNotBlank(state)){
+            query.put("state",state);
+        }
+        Page<Map> page = productService.list(query,currentPage,pageSize);
+        result.put(Constant.RESPONSE_DATA, page.getResult());
+        result.put(Constant.RESPONSE_DATA_PAGE, new RdPage(page));
+        ServletUtils.writeToResponse(response, result);
+    }
+
 
     private void saveMultipartFile(List<UploadFileRes> list, MultipartFile file) {
         if (!file.isEmpty()) {
