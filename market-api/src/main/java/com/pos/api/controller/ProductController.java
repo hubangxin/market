@@ -145,11 +145,12 @@ public class ProductController extends BaseController {
 
         //更新
         if (productId != null) {
-
+            productLoan.setUpdateTime(new Date());
             productLoan.setId(productId);
             result = productService.update(productLoan);
 
         } else {
+            productLoan.setCreateTime(new Date());
             productLoan.setState("1");
             result = productService.save(productLoan);
         }
@@ -227,15 +228,26 @@ public class ProductController extends BaseController {
     {
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> query = new HashMap<>();
-        if(StringUtils.isNotBlank(name)){
-            query.put("name",name);
+        if (StringUtils.isNotBlank(name)) {
+            query.put("name", name);
         }
-        if(StringUtils.isNotBlank(state)){
-            query.put("state",state);
+        if (StringUtils.isNotBlank(state)) {
+            query.put("state", state);
         }
-        Page<Map> page = productService.list(query,currentPage,pageSize);
+        Page<Map> page = productService.list(query, currentPage, pageSize);
         result.put(Constant.RESPONSE_DATA, page.getResult());
         result.put(Constant.RESPONSE_DATA_PAGE, new RdPage(page));
+        ServletUtils.writeToResponse(response, result);
+    }
+
+
+    @RequestMapping("/product/apply.htm")
+    public void apply(@RequestParam(value = "ip") String ip,
+                      @RequestParam(value = "productId") Long productId)
+
+    {
+        Map<String, Object> result = new HashMap<>();
+        result = productService.apply(productId, ip);
         ServletUtils.writeToResponse(response, result);
     }
 

@@ -4,7 +4,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wz.cashloan.core.common.context.Constant;
 import com.wz.cashloan.core.common.context.Global;
+import com.wz.cashloan.core.mapper.ProductHitMapper;
 import com.wz.cashloan.core.mapper.ProductLoanMapper;
+import com.wz.cashloan.core.model.ProductHit;
 import com.wz.cashloan.core.model.ProductLoan;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,8 @@ import java.util.Map;
 public class ProductService {
     @Resource
     private ProductLoanMapper productLoanMapper;
+    @Resource
+    private ProductHitMapper productHitMapper;
 
     public Page<Map> findAll(String labelId, int currentPage, int pageSize) {
         Map params = new HashMap();
@@ -133,5 +138,18 @@ public class ProductService {
         PageHelper.startPage(currentPage, pageSize);
         List<Map> mapList = productLoanMapper.findAllProductLoan(queryMap);
         return (Page<Map>) mapList;
+    }
+
+
+    public Map apply(Long productId, String ip) {
+        Map<String, Object> res = new HashMap();
+        ProductHit productHit = new ProductHit();
+        productHit.setIp(ip);
+        productHit.setProductId(productId);
+        productHitMapper.insert(productHit);
+
+        res.put(Constant.RESPONSE_CODE, Constant.SUCCEED_CODE_VALUE);
+        res.put(Constant.RESPONSE_CODE_MSG, Constant.OPERATION_SUCCESS);
+        return res;
     }
 }
