@@ -36,11 +36,28 @@ public class ProductService {
         }
         PageHelper.startPage(currentPage, pageSize);
         List<Map> mapList = productLoanMapper.findAllProductLoan(params);
+        String serverHost = Global.getValue("server_host");
+        for (int i = 0; i < mapList.size(); i++) {
+            Map map = mapList.get(i);
+            try {
+                map.put("picture", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(map.get("picture").toString()) ? "" : URLEncoder.encode(map.get("picture").toString(), "UTF-8")));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
         return (Page<Map>) mapList;
     }
 
     public Map findById(Long id) {
-        return productLoanMapper.findById(id);
+        Map map = productLoanMapper.findById(id);
+        String serverHost = Global.getValue("server_host");
+        try {
+            map.put("applyProcessImg", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(map.get("applyProcessImg").toString()) ? "" : URLEncoder.encode(map.get("applyProcessImg").toString(), "UTF-8")));
+            map.put("picture", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(map.get("picture").toString()) ? "" : URLEncoder.encode(map.get("picture").toString(), "UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 
     public ProductLoan selectByPrimaryKey(Long id) {
