@@ -356,6 +356,6 @@
     <select id="findById" parameterType="java.lang.Long" resultType="java.util.Map">
         SELECT id,`name`,apply_condition as applyCondition,apply_count as applyCount,apply_process_img as applyProcessImg, description,hot_label as hotLabel,
         label_ids as labelIds,limit_unit as limitUnit,max_amount as maxAmount, max_limit as maxLimit,min_amount as minAmount, min_limit as minLimit,
-        pro_instructions as proInstructions,picture,rate,rate_type as rateType FROM product_loan where id = #{id,jdbcType=BIGINT}
+        pro_instructions as proInstructions,picture,rate,rate_type as rateType,pro_url as proUrl,pro_code as proCode FROM product_loan where id = #{id,jdbcType=BIGINT}
     </select>
 </mapper>

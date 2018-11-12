@@ -97,7 +97,7 @@ public class ProductController extends BaseController {
                              @RequestParam(value = "rate", required = true) String rate,
                              @RequestParam(value = "rateType", required = true) String rateType,
                              @RequestParam(value = "proCode", required = true) String proCode,
-                             @RequestParam(value = "sort", required = true) int sort,
+                             @RequestParam(value = "sort", required = false) Integer sort,
                              @RequestParam(value = "labelIds", required = true) String labelIds,
                              @RequestParam(value = "proUrl", required = true) String proUrl,
                              @RequestParam(value = "applyCondition", required = true) String applyCondition,
@@ -132,12 +132,12 @@ public class ProductController extends BaseController {
         productLoan.setApplyCondition(applyCondition);
         productLoan.setProInstructions(proInstructions);
 
-        if (!picture.isEmpty()) {
+        if (picture != null && !picture.isEmpty()) {
             UploadFileRes model = save(picture);
             productLoan.setPicture(model.getResPath());
         }
 
-        if (!applyProcessImg.isEmpty()) {
+        if (applyProcessImg != null &&!applyProcessImg.isEmpty()) {
             UploadFileRes model = save(applyProcessImg);
             productLoan.setApplyProcessImg(model.getResPath());
         }
@@ -189,7 +189,23 @@ public class ProductController extends BaseController {
         result = productService.update(productLoan);
         ServletUtils.writeToResponse(response, result);
     }
+    /**
+     * 启用
+     *
+     * @param productId
+     */
+    @RequestMapping("/product/open.htm")
+    public void open(@RequestParam(value = "productId") Long productId)
 
+    {
+        Map<String, Object> result = new HashMap<>();
+        ProductLoan productLoan = new ProductLoan();
+        productLoan.setId(productId);
+        productLoan.setState("1");
+        productLoan.setUpdateTime(new Date());
+        result = productService.update(productLoan);
+        ServletUtils.writeToResponse(response, result);
+    }
     /**
      * 删除
      *
@@ -200,7 +216,7 @@ public class ProductController extends BaseController {
 
     {
         Map<String, Object> result = new HashMap<>();
-        result = productService.findById(productId);
+        result = productService.delete(productId);
         ServletUtils.writeToResponse(response, result);
     }
 

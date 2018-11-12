@@ -154,6 +154,15 @@ public class ProductService {
 
         PageHelper.startPage(currentPage, pageSize);
         List<Map> mapList = productLoanMapper.findAllProductLoan(queryMap);
+        String serverHost = Global.getValue("server_host");
+        for (int i = 0; i < mapList.size(); i++) {
+            Map map = mapList.get(i);
+            try {
+                map.put("picture", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(map.get("picture").toString()) ? "" : URLEncoder.encode(map.get("picture").toString(), "UTF-8")));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
         return (Page<Map>) mapList;
     }
 
@@ -165,6 +174,15 @@ public class ProductService {
         productHit.setProductId(productId);
         productHitMapper.insert(productHit);
 
+        res.put(Constant.RESPONSE_CODE, Constant.SUCCEED_CODE_VALUE);
+        res.put(Constant.RESPONSE_CODE_MSG, Constant.OPERATION_SUCCESS);
+        return res;
+    }
+
+
+    public Map delete(Long productId){
+        Map<String, Object> res = new HashMap();
+        productLoanMapper.deleteByPrimaryKey(productId);
         res.put(Constant.RESPONSE_CODE, Constant.SUCCEED_CODE_VALUE);
         res.put(Constant.RESPONSE_CODE_MSG, Constant.OPERATION_SUCCESS);
         return res;
