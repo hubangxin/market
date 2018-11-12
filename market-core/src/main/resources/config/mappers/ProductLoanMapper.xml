@@ -351,6 +351,7 @@
                 and state = #{state}
             </if>
         </where>
+        order by sort
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultType="java.util.Map">

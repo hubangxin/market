@@ -179,7 +179,12 @@ public class ProductService {
         return res;
     }
 
+    public Page<Map> count(Map<String, Object> queryMap, int currentPage, int pageSize) {
 
+        PageHelper.startPage(currentPage, pageSize);
+        List<Map> mapList = productHitMapper.countPvAndUv();
+        return (Page<Map>) mapList;
+    }
     public Map delete(Long productId){
         Map<String, Object> res = new HashMap();
         productLoanMapper.deleteByPrimaryKey(productId);

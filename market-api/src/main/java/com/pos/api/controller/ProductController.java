@@ -86,7 +86,7 @@ public class ProductController extends BaseController {
      * @param proInstructions 说明
      */
     @RequestMapping("/product/saveOrUpdate.htm")
-    public void saveOrUpdate(@RequestParam(value = "productId", required = false) Long productId,
+    public void saveOrUpdate(@RequestParam(value = "id", required = false) Long id,
                              @RequestParam(value = "name", required = true) String name,
                              @RequestParam(value = "description", required = true) String description,
                              @RequestParam(value = "minAmount", required = false) String minAmount,
@@ -137,16 +137,16 @@ public class ProductController extends BaseController {
             productLoan.setPicture(model.getResPath());
         }
 
-        if (applyProcessImg != null &&!applyProcessImg.isEmpty()) {
+        if (applyProcessImg != null && !applyProcessImg.isEmpty()) {
             UploadFileRes model = save(applyProcessImg);
             productLoan.setApplyProcessImg(model.getResPath());
         }
 
 
         //更新
-        if (productId != null) {
+        if (id != null) {
             productLoan.setUpdateTime(new Date());
-            productLoan.setId(productId);
+            productLoan.setId(id);
             result = productService.update(productLoan);
 
         } else {
@@ -189,6 +189,7 @@ public class ProductController extends BaseController {
         result = productService.update(productLoan);
         ServletUtils.writeToResponse(response, result);
     }
+
     /**
      * 启用
      *
@@ -206,6 +207,7 @@ public class ProductController extends BaseController {
         result = productService.update(productLoan);
         ServletUtils.writeToResponse(response, result);
     }
+
     /**
      * 删除
      *
@@ -267,6 +269,18 @@ public class ProductController extends BaseController {
         ServletUtils.writeToResponse(response, result);
     }
 
+    @RequestMapping("/product/count.htm")
+    public void count(@RequestParam(value = "currentPage") int currentPage,
+                      @RequestParam(value = "pageSize") int pageSize)
+
+    {
+        Map<String, Object> result = new HashMap<>();
+        Page<Map> page = productService.count(null, currentPage, pageSize);
+        result.put("list", page.getResult());
+        result.put(Constant.RESPONSE_DATA_PAGE, new RdPage(page));
+        ServletUtils.writeToResponse(response, result);
+        ServletUtils.writeToResponse(response, result);
+    }
 
     private void saveMultipartFile(List<UploadFileRes> list, MultipartFile file) {
         if (!file.isEmpty()) {

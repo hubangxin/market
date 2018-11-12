@@ -16,6 +16,21 @@
     from product_hit
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="countPvAndUv" resultType="java.util.Map" parameterType="java.lang.Long" >
+    SELECT
+	pl.`name`,t1.pv,t1.uv
+    FROM
+        product_loan pl
+    LEFT JOIN (
+        SELECT product_id,COUNT(*) AS pv,COUNT(DISTINCT ph.ip) AS uv
+        FROM
+            `product_hit` ph
+        GROUP BY
+            product_id
+    ) t1 ON t1.product_id = pl.id
+    WHERE
+	t1.pv IS NOT NULL
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from product_hit
     where id = #{id,jdbcType=BIGINT}
