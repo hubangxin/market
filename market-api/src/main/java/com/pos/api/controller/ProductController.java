@@ -100,10 +100,10 @@ public class ProductController extends BaseController {
                              @RequestParam(value = "sort", required = false) Integer sort,
                              @RequestParam(value = "labelIds", required = true) String labelIds,
                              @RequestParam(value = "proUrl", required = true) String proUrl,
-                             @RequestParam(value = "applyCondition", required = true) String applyCondition,
+                             @RequestParam(value = "applyCondition", required = false) String applyCondition,
                              @RequestParam(value = "applyProcessImg", required = false) MultipartFile applyProcessImg,
                              @RequestParam(value = "picture", required = false) MultipartFile picture,
-                             @RequestParam(value = "proInstructions", required = true) String proInstructions)
+                             @RequestParam(value = "proInstructions", required = false) String proInstructions)
 
     {
         Map<String, Object> result = new HashMap<>();
