@@ -52,7 +52,7 @@ public class ProductService {
         Map map = productLoanMapper.findById(id);
         String serverHost = Global.getValue("server_host");
         try {
-            map.put("applyProcessImg", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(map.get("applyProcessImg").toString()) ? "" : URLEncoder.encode(map.get("applyProcessImg").toString(), "UTF-8")));
+//            map.put("applyProcessImg", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(map.get("applyProcessImg").toString()) ? "" : URLEncoder.encode(map.get("applyProcessImg").toString(), "UTF-8")));
             map.put("picture", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(map.get("picture").toString()) ? "" : URLEncoder.encode(map.get("picture").toString(), "UTF-8")));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -137,7 +137,7 @@ public class ProductService {
         data.put("labelIds", productLoan1.getLabelIds());
         data.put("description", productLoan1.getDescription());
         try {
-            data.put("applyProcessImg", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(productLoan1.getApplyProcessImg()) ? "" : URLEncoder.encode(productLoan1.getApplyProcessImg(), "UTF-8")));
+//            data.put("applyProcessImg", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(productLoan1.getApplyProcessImg()) ? "" : URLEncoder.encode(productLoan1.getApplyProcessImg(), "UTF-8")));
             data.put("picture", serverHost + "/readFile.htm?path=" + (StringUtils.isBlank(productLoan1.getPicture()) ? "" : URLEncoder.encode(productLoan1.getPicture(), "UTF-8")));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
